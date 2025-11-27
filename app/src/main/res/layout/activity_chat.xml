@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <!-- Top Bar -->
@@ -20,28 +20,27 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/profilePic"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:scaleType="centerCrop"
-                android:background="#ECE5DD"
                 android:layout_marginEnd="8dp"
+                android:background="#ECE5DD"
+                android:scaleType="centerCrop"
                 tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/tvFriendName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Alice"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="Alice" />
         </LinearLayout>
-
     </androidx.appcompat.widget.Toolbar>
 
     <!-- RecyclerView for chat messages -->
@@ -50,35 +49,35 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
         android:clipToPadding="false"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
         android:scrollbars="vertical" />
 
     <!-- Input bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
         android:background="#FFFFFF"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        android:orientation="horizontal"
+        android:padding="8dp">
 
         <EditText
             android:id="@+id/editMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_weight="1"
+            android:background="@drawable/bg_edittext"
+            android:ellipsize="none"
             android:hint="@string/type_a_message"
             android:inputType="textMultiLine"
             android:maxLines="4"
-            android:background="@drawable/bg_edittext"
             android:padding="12dp"
-            android:layout_marginEnd="8dp"
             android:scrollHorizontally="false"
-            android:ellipsize="none"
             tools:ignore="Autofill" />
 
         <ImageButton
@@ -90,5 +89,4 @@
             app:tint="#FFFFFF"
             tools:ignore="ContentDescription" />
     </LinearLayout>
-
 </LinearLayout>
