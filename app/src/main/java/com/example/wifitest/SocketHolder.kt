@@ -11,12 +11,4 @@ object SocketHolder {
     var reader: BufferedReader? = null
     var writer: BufferedWriter? = null
 
-    fun clear() {
-        try { socket?.close() } catch (_: Exception) {}
-        try { serverSocket?.close() } catch (_: Exception) {}
-        socket = null
-        serverSocket = null
-        reader = null
-        writer = null
-    }
 }

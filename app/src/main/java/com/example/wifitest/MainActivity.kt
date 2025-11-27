@@ -1,6 +1,5 @@
 package com.example.wifitest
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,18 +8,15 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
-
-    private val PREFS_NAME = "wifiChatPrefs"
-    private val KEY_NAME = "userName"
-    private val KEY_IMAGE = "userImageUri"
 
     private lateinit var tvGreeting: TextView
     private lateinit var ivProfile: ImageView
@@ -36,9 +32,9 @@ class MainActivity : AppCompatActivity() {
         uri?.let {
             ivProfile.setImageURI(it)
             getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                .edit()
-                .putString(KEY_IMAGE, it.toString())
-                .apply()
+                .edit {
+                    putString(KEY_IMAGE, it.toString())
+                }
             val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
             UserProfile.bitmap = bitmap
         }
@@ -60,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         btnSend = findViewById(R.id.btnSendMode)
         btnReceive = findViewById(R.id.btnReceiveMode)
         btnTestChat = findViewById(R.id.btnTestChat)
-        testChatDesc = findViewById<TextView>(R.id.tvTestChatDesc)
+        testChatDesc = findViewById(R.id.tvTestChatDesc)
 
         initUI()
         initListeners()
@@ -73,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         if (name.isNullOrEmpty()) {
             promptForName()
         } else {
-            tvGreeting.text = "Hello, $name!"
+            tvGreeting.text = getString(R.string.hello__, name)
         }
 
         btnTestChat.visibility = Button.GONE
@@ -89,10 +85,10 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("OK") { _, _ ->
                 val name = editText.text.toString().trim().ifEmpty { "User" }
                 getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                    .edit()
-                    .putString(KEY_NAME, name)
-                    .apply()
-                tvGreeting.text = "Hello, $name!"
+                    .edit {
+                        putString(KEY_NAME, name)
+                    }
+                tvGreeting.text = getString(R.string.hello_, name)
             }
             .show()
     }
@@ -137,5 +133,11 @@ class MainActivity : AppCompatActivity() {
         btnTestChat.setOnClickListener {
             startActivity(Intent(this, TestChatActivity::class.java))
         }
+    }
+
+    companion object {
+        private const val PREFS_NAME = "wifiChatPrefs"
+        private const val KEY_NAME = "userName"
+        private const val KEY_IMAGE = "userImageUri"
     }
 }

@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -38,10 +37,10 @@ class HostActivity : AppCompatActivity() {
         helper = WifiDirectHelper(this)
 
         btnStart.setOnClickListener {
-            tvStatus.text = "Preparing..."
+            tvStatus.text = getString(R.string.preparing)
             // Prepare will check permissions, Wi-Fi, location, hotspot etc. and then call our onReady
             helper.prepareAndThen {
-                runOnUiThread { tvStatus.text = "Environment OK — Creating group..." }
+                runOnUiThread { tvStatus.text = getString(R.string.environment_ok_creating_group) }
                 createGroup()
             }
         }
@@ -50,7 +49,8 @@ class HostActivity : AppCompatActivity() {
         helper.setConnectionInfoCallback { info ->
             if (info.groupFormed && info.isGroupOwner) {
                 // once group is formed and we're owner, open server socket
-                runOnUiThread { tvStatus.text = "Group formed — starting server socket..." }
+                runOnUiThread { tvStatus.text =
+                    getString(R.string.group_formed_starting_server_socket) }
                 waitForClient()
             }
         }
@@ -62,10 +62,11 @@ class HostActivity : AppCompatActivity() {
     private fun createGroup() {
         helper.createGroupWithRetries(
             onCreated = {
-                runOnUiThread { tvStatus.text = "Group created. Waiting for client..." }
+                runOnUiThread { tvStatus.text = getString(R.string.group_created_waiting_for_client) }
             },
             onFailure = { reason ->
-                runOnUiThread { tvStatus.text = "createGroup failed: $reason (will retry)" }
+                runOnUiThread { tvStatus.text =
+                    getString(R.string.creategroup_failed_will_retry_, reason) }
                 hostScope.launch {
                     delay(1200)
                     createGroup()
@@ -80,17 +81,18 @@ class HostActivity : AppCompatActivity() {
         hostScope.launch {
             try {
                 // Close any old sockets first
-                SocketHolder.socket?.let { try { it.close() } catch (e: Exception) {} }
-                SocketHolder.serverSocket?.let { try { it.close() } catch (e: Exception) {} }
+                SocketHolder.socket?.let { try { it.close() } catch (_: Exception) {} }
+                SocketHolder.serverSocket?.let { try { it.close() } catch (_: Exception) {} }
 
                 val port = 8988
                 val server = ServerSocket(port)
                 SocketHolder.serverSocket = server
 
                 withContext(Dispatchers.Main) {
-                    tvStatus.text = "Server listening on port 8080, waiting for client..."
+                    tvStatus.text =
+                        getString(R.string.server_listening_on_port_waiting_for_client_, port)
                 }
-                Log.d("HostActivity", "Server listening on port $port")
+                Log.d("HostActivity", getString(R.string.server_listening_on_port_, port))
 
                 val client = server.accept() // blocks until client connects
                 SocketHolder.socket = client
@@ -112,7 +114,7 @@ class HostActivity : AppCompatActivity() {
                     AlertDialog.Builder(this@HostActivity)
                         .setTitle("Success")
                         .setMessage("Client connected successfully.")
-                        .setPositiveButton("Go to Chat") { dialog, _ ->
+                        .setPositiveButton("Go to Chat") { _, _ ->
                             if (SocketHolder.socket != null &&
                                 SocketHolder.reader != null &&
                                 SocketHolder.writer != null
@@ -130,7 +132,7 @@ class HostActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    tvStatus.text = "Server socket error: ${e.message}"
+                    tvStatus.text = getString(R.string.server_socket_error_, e.message)
                 }
                 Log.e("HostActivity", "Server error", e)
             }

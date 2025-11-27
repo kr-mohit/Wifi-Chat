@@ -43,7 +43,7 @@ class TestChatActivity : AppCompatActivity() {
         recyclerChat.adapter = chatAdapter
         recyclerChat.layoutManager = LinearLayoutManager(this)
 
-        friendName.text = "Test Person"
+        friendName.text = getString(R.string.test_person)
 
         btnSend.setOnClickListener {
             val message = editMessage.text.toString()

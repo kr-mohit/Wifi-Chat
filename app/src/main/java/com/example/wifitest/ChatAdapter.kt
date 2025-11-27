@@ -15,12 +15,12 @@ class ChatAdapter(private val messages: MutableList<ChatMessage>) :
     }
 
     // Sent message ViewHolder
-    inner class SentMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class SentMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val msgText: TextView = itemView.findViewById(R.id.tvMessage)
     }
 
     // Received message ViewHolder
-    inner class ReceivedMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ReceivedMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val msgText: TextView = itemView.findViewById(R.id.tvMessage)
     }
 

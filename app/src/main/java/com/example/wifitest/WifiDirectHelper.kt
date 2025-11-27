@@ -2,7 +2,6 @@ package com.example.wifitest
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.*
 import android.location.LocationManager
 import android.net.wifi.WifiManager
@@ -18,7 +17,6 @@ import androidx.core.content.ContextCompat
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlin.coroutines.resume
 
 class WifiDirectHelper(
     private val activity: ComponentActivity,
@@ -33,9 +31,6 @@ class WifiDirectHelper(
         activity.getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager
     private val channel: WifiP2pManager.Channel =
         manager.initialize(activity, activity.mainLooper, null)
-
-    fun getManager() = manager
-    fun getChannel() = channel
 
     private var receiverRegistered = false
     private val p2pIntentFilter = IntentFilter().apply {
@@ -125,7 +120,7 @@ class WifiDirectHelper(
         if (!receiverRegistered) return
         try {
             activity.unregisterReceiver(p2pReceiver)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // ignore
         }
         receiverRegistered = false
@@ -159,7 +154,7 @@ class WifiDirectHelper(
         return try {
             lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                     lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
@@ -173,7 +168,7 @@ class WifiDirectHelper(
             val method = wm.javaClass.getDeclaredMethod("isWifiApEnabled")
             method.isAccessible = true
             method.invoke(wm) as? Boolean ?: false
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
@@ -191,7 +186,7 @@ class WifiDirectHelper(
         // best-effort; different OEMs have different screens
         try {
             activity.startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             openWifiSettings()
         }
     }
@@ -207,7 +202,7 @@ class WifiDirectHelper(
 
     private var onReadyCallback: (() -> Unit)? = null
 
-    private suspend fun checkAndProceed() {
+    private fun checkAndProceed() {
         // 1) Permissions
         if (!hasPermissions()) {
             permissionLauncher.launch(permissions)
@@ -247,8 +242,6 @@ class WifiDirectHelper(
      */
     @SuppressLint("MissingPermission")
     fun createGroupWithRetries(
-        maxRetries: Int = 3,
-        retryDelayMs: Long = 1200,
         onCreated: () -> Unit,
         onFailure: (reason: Int) -> Unit
     ) {
@@ -324,13 +317,6 @@ class WifiDirectHelper(
                 onResult(false)
             }
         })
-    }
-
-    // call this to request connectionInfo synchronously (via callback)
-    fun requestConnectionInfo(callback: (WifiP2pInfo) -> Unit) {
-        manager.requestConnectionInfo(channel) { info ->
-            callback(info)
-        }
     }
 
     /**

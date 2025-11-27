@@ -2,13 +2,13 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="16dp"
-    android:background="#E0E0E0">
+    android:padding="16dp">
 
     <!-- Card container -->
     <androidx.cardview.widget.CardView
@@ -27,27 +27,34 @@
             android:gravity="center_horizontal">
 
             <!-- Profile Image -->
-            <ImageView
-                android:id="@+id/ivProfile"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/ic_user_placeholder"
-                android:scaleType="centerCrop"
-                android:layout_marginBottom="8dp"
-                android:contentDescription="Profile"/>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="50dp"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:contentDescription="@string/profile"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_user_placeholder" />
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:gravity="center">
+                android:gravity="center"
+                tools:ignore="UseCompoundDrawables">
 
                 <!-- Greeting -->
                 <TextView
                     android:id="@+id/tvGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hello!"
+                    android:text="@string/hello"
                     android:textSize="20sp"
                     android:layout_marginEnd="8dp"
                     android:textStyle="bold"/>
@@ -56,7 +63,8 @@
                     android:id="@+id/ivEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@android:drawable/ic_menu_edit" />
+                    android:src="@android:drawable/ic_menu_edit"
+                    tools:ignore="ContentDescription" />
             </LinearLayout>
 
             <!-- Host Mode Button -->
@@ -64,14 +72,14 @@
                 android:id="@+id/btnSendMode"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Host Mode"
+                android:text="@string/host_mode"
                 android:textAllCaps="false"
                 android:backgroundTint="#4CAF50"
                 android:textColor="#FFFFFF"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Use this if your device is providing the Wi-Fi hotspot."
+                android:text="@string/use_this_if_your_device_is_providing_the_wi_fi_hotspot"
                 android:textSize="14sp"
                 android:textColor="#666666"
                 android:layout_marginBottom="16dp"/>
@@ -81,14 +89,14 @@
                 android:id="@+id/btnReceiveMode"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Client Mode"
+                android:text="@string/client_mode"
                 android:textAllCaps="false"
                 android:backgroundTint="#2196F3"
                 android:textColor="#FFFFFF"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Use this if you are connecting to someone else’s hotspot."
+                android:text="@string/use_this_if_you_are_connecting_to_someone_else_s_hotspot"
                 android:textSize="14sp"
                 android:textColor="#666666"
                 android:layout_marginBottom="16dp"/>
@@ -98,7 +106,7 @@
                 android:id="@+id/btnTestChat"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Test Chat UI"
+                android:text="@string/test_chat_ui"
                 android:textAllCaps="false"
                 android:backgroundTint="#FF9800"
                 android:textColor="#FFFFFF"
@@ -107,7 +115,7 @@
                 android:id="@+id/tvTestChatDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Try chat UI without connecting any device."
+                android:text="@string/try_chat_ui_without_connecting_any_device"
                 android:textSize="14sp"
                 android:textColor="#666666"
                 android:layout_marginTop="8dp"

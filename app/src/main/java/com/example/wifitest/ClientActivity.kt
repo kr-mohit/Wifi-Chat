@@ -4,14 +4,19 @@ import android.content.Intent
 import android.net.wifi.p2p.WifiP2pDevice
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import androidx.appcompat.app.AlertDialog
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.net.InetSocketAddress
 import java.net.Socket
 
@@ -36,9 +41,9 @@ class ClientActivity : AppCompatActivity() {
         helper = WifiDirectHelper(this)
 
         btnScan.setOnClickListener {
-            tvStatus.text = "Preparing..."
+            tvStatus.text = getString(R.string.preparing)
             helper.prepareAndThen {
-                runOnUiThread { tvStatus.text = "Ready — discovering peers..." }
+                runOnUiThread { tvStatus.text = getString(R.string.ready_discovering_peers) }
                 helper.discoverPeers()
             }
         }
@@ -58,14 +63,15 @@ class ClientActivity : AppCompatActivity() {
 
         listDevices.setOnItemClickListener { _, _, pos, _ ->
             val dev = devices[pos]
-            tvStatus.text = "Connecting to ${dev.deviceName}..."
+            tvStatus.text = getString(R.string.connecting_to, dev.deviceName)
             helper.connectToDevice(dev) { ok ->
                 runOnUiThread {
                     if (!ok) {
-                        tvStatus.text = "Failed to initiate connection"
+                        tvStatus.text = getString(R.string.failed_to_initiate_connection)
                     } else {
                         // wait for connection info via helper's connectionInfoCallback
-                        tvStatus.text = "Connection initiated — waiting for connection info..."
+                        tvStatus.text =
+                            getString(R.string.connection_initiated_waiting_for_connection_info)
                     }
                 }
             }
@@ -75,7 +81,8 @@ class ClientActivity : AppCompatActivity() {
             if (info.groupFormed && !info.isGroupOwner) {
                 // connect socket to group owner ip
                 val hostIp = info.groupOwnerAddress?.hostAddress ?: return@setConnectionInfoCallback
-                runOnUiThread { tvStatus.text = "Group formed, connecting to host $hostIp ..." }
+                runOnUiThread { tvStatus.text =
+                    getString(R.string.group_formed_connecting_to_host, hostIp) }
                 connectToSocket(hostIp)
             }
         }
@@ -130,7 +137,7 @@ class ClientActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    tvStatus.text = "Socket error: ${e.message}"
+                    tvStatus.text = getString(R.string.socket_error_, e.message)
                 }
             }
         }
