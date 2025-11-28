@@ -276,9 +276,6 @@ class WifiDirectHelper(
                 create()
             }
         })
-
-        // If failure occurs, caller can call retryCreateGroup() or we can implement internal retry handling.
-        // For convenience, the onFailure can examine reason and re-call this function.
     }
 
     // --------------- Client flow --------------------
@@ -303,9 +300,6 @@ class WifiDirectHelper(
         val config = WifiP2pConfig().apply {
             deviceAddress = device.deviceAddress
             wps.setup = WpsInfo.PBC
-            // we can attempt to hint groupOwnerIntent if you want:
-            // groupOwnerIntent = 0 // prefer remote
-            // groupOwnerIntent = 15 // prefer this
         }
 
         manager.connect(channel, config, object : WifiP2pManager.ActionListener {
@@ -329,7 +323,6 @@ class WifiDirectHelper(
         } catch (e: Exception) {
             Log.e(TAG, "cleanup failed", e)
         } finally {
-            // cancel internal coroutines
             scope.cancel()
         }
     }

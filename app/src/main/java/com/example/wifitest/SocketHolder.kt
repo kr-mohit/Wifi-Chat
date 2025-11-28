@@ -10,5 +10,4 @@ object SocketHolder {
     var serverSocket: ServerSocket? = null
     var reader: BufferedReader? = null
     var writer: BufferedWriter? = null
-
 }
